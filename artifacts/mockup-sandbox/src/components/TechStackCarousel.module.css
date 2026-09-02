@@ -1,0 +1,43 @@
+.wrapper {
+  overflow: hidden;
+  width: 100%;
+  padding: 12px 0;
+  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius: 12px;
+}
+
+.track {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  animation: scroll 18s linear infinite;
+}
+
+.item {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-width: 160px;
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 10px;
+  backdrop-filter: blur(6px);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+.logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
