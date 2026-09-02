@@ -1,0 +1,386 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: rooms
+    description: Shared listening room operations
+  - name: music
+    description: Music search operations
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /rooms:
+    post:
+      operationId: createRoom
+      tags: [rooms]
+      summary: Create a listening room
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoomInput"
+      responses:
+        "201":
+          description: Created room
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Room"
+  /rooms/{code}:
+    get:
+      operationId: getRoom
+      tags: [rooms]
+      summary: Get a listening room
+      parameters:
+        - $ref: "#/components/parameters/RoomCode"
+      responses:
+        "200":
+          description: Room details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Room"
+        "404":
+          description: Room not found
+  /rooms/{code}/state:
+    get:
+      operationId: getRoomState
+      tags: [rooms]
+      summary: Get the latest shared playback state
+      parameters:
+        - $ref: "#/components/parameters/RoomCode"
+      responses:
+        "200":
+          description: Shared state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoomState"
+        "404":
+          description: Room not found
+    patch:
+      operationId: updateRoomState
+      tags: [rooms]
+      summary: Update shared playback state
+      parameters:
+        - $ref: "#/components/parameters/RoomCode"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoomStateUpdate"
+      responses:
+        "200":
+          description: Updated shared state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoomState"
+        "404":
+          description: Room not found
+  /rooms/{code}/presence:
+    post:
+      operationId: joinRoom
+      tags: [rooms]
+      summary: Join or refresh presence in a room
+      parameters:
+        - $ref: "#/components/parameters/RoomCode"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PresenceInput"
+      responses:
+        "200":
+          description: Current room presence and state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoomSnapshot"
+        "404":
+          description: Room not found
+  /rooms/{code}/queue:
+    get:
+      operationId: listQueue
+      tags: [rooms]
+      summary: List the room queue
+      parameters:
+        - $ref: "#/components/parameters/RoomCode"
+      responses:
+        "200":
+          description: Queue items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/QueueItem"
+        "404":
+          description: Room not found
+    post:
+      operationId: addQueueItem
+      tags: [rooms]
+      summary: Add a song to the room queue
+      parameters:
+        - $ref: "#/components/parameters/RoomCode"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QueueItemInput"
+      responses:
+        "201":
+          description: Added queue item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueItem"
+        "404":
+          description: Room not found
+  /rooms/{code}/queue/{itemId}:
+    delete:
+      operationId: removeQueueItem
+      tags: [rooms]
+      summary: Remove a song from the room queue
+      parameters:
+        - $ref: "#/components/parameters/RoomCode"
+        - name: itemId
+          in: path
+          required: true
+          schema:
+            type: number
+      responses:
+        "204":
+          description: Removed
+        "404":
+          description: Room or queue item not found
+  /songs/search:
+    get:
+      operationId: searchSongs
+      tags: [music]
+      summary: Search songs across languages
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - name: language
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Matching tracks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Song"
+components:
+  parameters:
+    RoomCode:
+      name: code
+      in: path
+      required: true
+      schema:
+        type: string
+        minLength: 4
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+    RoomInput:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        hostName:
+          type: string
+          minLength: 1
+      required: [name, hostName]
+    Room:
+      type: object
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+        hostName:
+          type: string
+        listenerCount:
+          type: number
+        createdAt:
+          type: string
+      required: [code, name, hostName, listenerCount, createdAt]
+    PresenceInput:
+      type: object
+      properties:
+        listenerId:
+          type: string
+          minLength: 1
+        displayName:
+          type: string
+          minLength: 1
+      required: [listenerId, displayName]
+    Listener:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+        color:
+          type: string
+        lastSeen:
+          type: string
+      required: [id, displayName, color, lastSeen]
+    Song:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        artist:
+          type: string
+        album:
+          type: string
+        artworkUrl:
+          type: ["string", "null"]
+        previewUrl:
+          type: ["string", "null"]
+        durationMs:
+          type: ["number", "null"]
+        sourceUrl:
+          type: ["string", "null"]
+      required: [id, title, artist, album, artworkUrl, previewUrl, durationMs, sourceUrl]
+    RoomState:
+      type: object
+      properties:
+        isPlaying:
+          type: boolean
+        positionMs:
+          type: number
+        updatedAt:
+          type: string
+        updatedBy:
+          type: string
+        currentSong:
+          type: ["object", "null"]
+          properties:
+            id:
+              type: string
+            title:
+              type: string
+            artist:
+              type: string
+            album:
+              type: string
+            artworkUrl:
+              type: ["string", "null"]
+            previewUrl:
+              type: ["string", "null"]
+            durationMs:
+              type: ["number", "null"]
+            sourceUrl:
+              type: ["string", "null"]
+          required: [id, title, artist, album, artworkUrl, previewUrl, durationMs, sourceUrl]
+      required: [isPlaying, positionMs, updatedAt, updatedBy, currentSong]
+    RoomStateUpdate:
+      type: object
+      properties:
+        isPlaying:
+          type: boolean
+        positionMs:
+          type: number
+          minimum: 0
+        updatedBy:
+          type: string
+          minLength: 1
+        currentSong:
+          type: ["object", "null"]
+          properties:
+            id:
+              type: string
+            title:
+              type: string
+            artist:
+              type: string
+            album:
+              type: string
+            artworkUrl:
+              type: ["string", "null"]
+            previewUrl:
+              type: ["string", "null"]
+            durationMs:
+              type: ["number", "null"]
+            sourceUrl:
+              type: ["string", "null"]
+          required: [id, title, artist, album, artworkUrl, previewUrl, durationMs, sourceUrl]
+      required: [isPlaying, positionMs, updatedBy, currentSong]
+    RoomSnapshot:
+      type: object
+      properties:
+        room:
+          $ref: "#/components/schemas/Room"
+        state:
+          $ref: "#/components/schemas/RoomState"
+        listeners:
+          type: array
+          items:
+            $ref: "#/components/schemas/Listener"
+      required: [room, state, listeners]
+    QueueItemInput:
+      type: object
+      properties:
+        addedBy:
+          type: string
+          minLength: 1
+        song:
+          $ref: "#/components/schemas/Song"
+      required: [addedBy, song]
+    QueueItem:
+      type: object
+      properties:
+        id:
+          type: number
+        addedBy:
+          type: string
+        song:
+          $ref: "#/components/schemas/Song"
+        addedAt:
+          type: string
+      required: [id, addedBy, song, addedAt]
+
