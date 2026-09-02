@@ -1,0 +1,1 @@
+- [OpenAPI integer compatibility](openapi-zod-compatibility.md) — generated Zod validators currently support number schemas, not z.int output.
