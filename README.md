@@ -1,8 +1,10 @@
 # beatsync
 
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) [![TypeScript](https://img.shields.io/badge/TypeScript-%5E5.9-blue?logo=typescript)](https://www.typescriptlang.org/) [![pnpm](https://img.shields.io/badge/pnpm-Workspace-%2346B0FF?logo=pnpm)](https://pnpm.io/) [![Vite](https://img.shields.io/badge/Vite-%23197AFA?logo=vite&logoColor=white)](https://vitejs.dev/) [![React](https://img.shields.io/badge/React-%2320232a?logo=react&logoColor=%2361DAFB)](https://reactjs.org/)
+
 ![beatsync demo](https://raw.githubusercontent.com/wotshan/beatsync/main/.github/assets/demo.gif)
 
-beatsync is a monorepo that contains an API server and a frontend sandbox for prototyping and demonstrating components. It uses TypeScript across the workspace and modern tooling (pnpm, Vite, React, Express, Drizzle ORM, and Zod). This README provides a concise, professional, and animated overview to help contributors and users get started quickly.
+beatsync is a TypeScript-first monorepo containing an API server and a frontend sandbox for prototyping and demonstrating UI components. The README shows animated placeholders for interactive carousels (tech stack and a glassmorphism-styled showcase) — replace the GIFs in .github/assets with your exported recordings to make them live.
 
 ---
 
@@ -17,6 +19,7 @@ The animated image above demonstrates the current UI prototype and interaction f
 - Drizzle ORM + type-safe schemas
 - React + Vite sandbox for rapid prototyping
 - Zod-based contract definitions for API types
+- Animated tech stack and glassmorphism carousels (placeholders)
 
 ## Table of contents
 
@@ -24,6 +27,8 @@ The animated image above demonstrates the current UI prototype and interaction f
 - [Install](#install)
 - [Run (development)](#run-development)
 - [Build](#build)
+- [Tech stack carousel](#tech-stack-carousel)
+- [Glassmorphism carousel](#glassmorphism-carousel)
 - [Project structure](#project-structure)
 - [Contributing](#contributing)
 - [License](#license)
@@ -89,6 +94,26 @@ cd ../api-server
 pnpm run build
 ```
 
+## Tech stack carousel
+
+Animated showcase of the primary technologies used across the workspace. This is a looping carousel GIF placeholder; add your exported recording as `.github/assets/tech-stack-carousel.gif` to display it here.
+
+![tech stack carousel](https://raw.githubusercontent.com/wotshan/beatsync/main/.github/assets/tech-stack-carousel.gif)
+
+Suggested items to show in the carousel (looping):
+- TypeScript
+- React + Vite
+- pnpm workspace
+- Express
+- Drizzle ORM
+- Zod
+
+## Glassmorphism carousel
+
+A small glassmorphism-styled UI showcase to demonstrate visual design ideas (blur, translucent panels, soft shadows). Replace the placeholder GIF at `.github/assets/glassmorphism-carousel.gif` with your own recording.
+
+![glassmorphism carousel](https://raw.githubusercontent.com/wotshan/beatsync/main/.github/assets/glassmorphism-carousel.gif)
+
 ## Project structure
 
 - artifacts/
@@ -106,13 +131,13 @@ Thanks for wanting to contribute! A few guidelines:
 
 If you're unsure where to start, open an issue describing the improvement and tag it as `good first issue`.
 
-## Replacing the demo animation
+## Replacing the demo & carousel animations
 
-To add your own animated demo:
+To add your own animated demos:
 
 1. Create a `.github/assets` directory (if it doesn't exist).
-2. Add a GIF and name it `demo.gif`.
-3. Commit and push. The README will display the animation automatically.
+2. Add GIFs and name them `demo.gif`, `tech-stack-carousel.gif`, and `glassmorphism-carousel.gif`.
+3. Commit and push. The README will display the animations automatically.
 
 ## License
 
